@@ -97,9 +97,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           <SheetHeader className="border-b border-border p-4">
             <SheetTitle className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <FileText className="h-4 w-4 text-primary-foreground" />
+                <Briefcase className="h-4 w-4 text-primary-foreground" />
               </div>
-              {organization?.name ?? "QuoteKit"}
+              {organization?.name ?? "SASKA"}
             </SheetTitle>
           </SheetHeader>
           <nav className="flex flex-col gap-1 p-4">
