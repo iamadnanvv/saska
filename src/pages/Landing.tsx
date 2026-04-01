@@ -14,7 +14,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroAsset from "@/assets/hero-dashboard.png.asset.json";
+import heroDashboard from "@/assets/hero-dashboard.jpg";
 
 const features = [
   {
