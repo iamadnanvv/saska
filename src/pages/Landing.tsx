@@ -11,6 +11,7 @@ import {
   TrendingUp,
   ArrowRight,
   CheckCircle2,
+  Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroAsset from "@/assets/hero-dashboard.png.asset.json";
@@ -18,15 +19,15 @@ import heroAsset from "@/assets/hero-dashboard.png.asset.json";
 const features = [
   {
     icon: Sparkles,
-    title: "AI-Powered Writing",
+    title: "AI-Powered Proposals",
     description:
-      "Generate polished, persuasive proposal content in seconds with built-in AI assistance.",
+      "Generate polished, persuasive consulting proposals in seconds with built-in AI assistance.",
   },
   {
     icon: Share2,
     title: "One-Click Sharing",
     description:
-      "Send branded proposals via a secure link — no attachments, no friction.",
+      "Send branded proposals via a secure link — no attachments, no friction for your clients.",
   },
   {
     icon: BarChart3,
@@ -38,7 +39,7 @@ const features = [
     icon: Palette,
     title: "Branded Templates",
     description:
-      "Start from beautiful, customizable templates that match your company's identity.",
+      "Start from beautiful, customizable templates that reflect your consultancy's identity.",
   },
   {
     icon: Users,
@@ -50,35 +51,35 @@ const features = [
     icon: TrendingUp,
     title: "Analytics & Insights",
     description:
-      "Track win rates, response times, and proposal performance across your team.",
+      "Track win rates, response times, and proposal performance across your consulting team.",
   },
 ];
 
 const steps = [
   {
     num: "01",
-    title: "Create",
+    title: "Scope",
     description:
-      "Pick a template, customize your content with AI help, and add your pricing.",
+      "Pick a template, customize your consulting scope with AI help, and define your pricing.",
   },
   {
     num: "02",
-    title: "Send",
+    title: "Present",
     description:
-      "Share a branded link with your client — they view it instantly in their browser.",
+      "Share a beautifully branded link with your client — they review it instantly in their browser.",
   },
   {
     num: "03",
-    title: "Win",
+    title: "Close",
     description:
-      "Track engagement in real time, get notified on acceptance, and close the deal.",
+      "Track engagement in real time, get notified on acceptance, and win the engagement.",
   },
 ];
 
 const logos = [
-  "Acme Corp",
-  "TechStart",
-  "Global Media",
+  "McKinley & Co",
+  "Apex Advisory",
+  "Stratton Group",
   "BrightPath",
   "Zenith",
 ];
@@ -98,10 +99,10 @@ export default function Landing() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <FileText className="h-4 w-4 text-primary-foreground" />
+              <Briefcase className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="font-display text-lg font-bold text-foreground">
-              QuoteKit
+              SASKA
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -122,17 +123,17 @@ export default function Landing() {
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm text-muted-foreground">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              Now with AI-powered content writing
+              Now with AI-powered proposal writing
             </div>
             <h1 className="font-display text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Win more deals with{" "}
+              Win more engagements with{" "}
               <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                beautiful proposals
+                compelling proposals
               </span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-              Create, send, and track stunning proposals that close. QuoteKit
-              gives your team the tools to look professional and move fast.
+              Create, send, and track professional consulting proposals that close.
+              SASKA gives your team the tools to look credible and move fast.
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Button
@@ -159,7 +160,7 @@ export default function Landing() {
             <div className="rounded-xl border border-border bg-card p-2 shadow-2xl shadow-primary/10">
               <img
                 src={heroAsset.url}
-                alt="QuoteKit proposal dashboard showing a professional proposal with pricing, status tracking, and client notifications"
+                alt="SASKA proposal dashboard showing a professional consulting proposal with pricing, status tracking, and client notifications"
                 className="w-full rounded-lg"
                 loading="eager"
               />
@@ -174,7 +175,7 @@ export default function Landing() {
       <section className="border-y border-border bg-muted/50 py-10">
         <div className="mx-auto max-w-6xl px-6">
           <p className="mb-6 text-center text-sm font-medium text-muted-foreground">
-            Trusted by 500+ teams worldwide
+            Trusted by 500+ consulting firms worldwide
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
             {logos.map((name) => (
@@ -194,11 +195,11 @@ export default function Landing() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-              Everything you need to win
+              Everything you need to win engagements
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              From drafting to tracking, QuoteKit handles every step of the
-              proposal workflow.
+              From drafting to tracking, SASKA handles every step of the
+              consulting proposal workflow.
             </p>
           </div>
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -231,7 +232,7 @@ export default function Landing() {
               Three steps to close
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              QuoteKit makes your proposal process effortless.
+              SASKA makes your consulting proposal process effortless.
             </p>
           </div>
           <div className="mt-16 grid gap-8 sm:grid-cols-3">
@@ -257,15 +258,15 @@ export default function Landing() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
             <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-              Why teams switch to QuoteKit
+              Why consulting firms switch to SASKA
             </h2>
             <ul className="mt-10 grid gap-4 text-left sm:grid-cols-2">
               {[
-                "Close deals 40% faster",
+                "Close engagements 40% faster",
                 "Professional proposals in minutes",
                 "Real-time open & view tracking",
                 "AI writes your first draft",
-                "Team-wide template library",
+                "Firm-wide template library",
                 "No more email attachments",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3">
@@ -286,7 +287,7 @@ export default function Landing() {
             Ready to send proposals that win?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
-            Join hundreds of teams already using QuoteKit to close more deals.
+            Join hundreds of consulting firms already using SASKA to close more engagements.
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Button
@@ -314,14 +315,14 @@ export default function Landing() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
           <div className="flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary">
-              <FileText className="h-3 w-3 text-primary-foreground" />
+              <Briefcase className="h-3 w-3 text-primary-foreground" />
             </div>
             <span className="font-display text-sm font-semibold text-foreground">
-              QuoteKit
+              SASKA
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} QuoteKit. All rights reserved.
+            © {new Date().getFullYear()} SASKA. All rights reserved.
           </p>
         </div>
       </footer>
