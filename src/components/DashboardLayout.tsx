@@ -41,7 +41,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <Briefcase className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="text-lg font-bold font-display text-foreground hidden sm:block">
-                {organization?.name ?? "QuoteKit"}
+                {organization?.name ?? "SASKA"}
               </span>
             </Link>
           </div>
