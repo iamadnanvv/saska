@@ -14,7 +14,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroAsset from "@/assets/hero-dashboard.png.asset.json";
+import heroDashboard from "@/assets/hero-dashboard.jpg";
 
 const features = [
   {
@@ -159,7 +159,7 @@ export default function Landing() {
           <div className="relative mx-auto mt-16 max-w-5xl animate-fade-in">
             <div className="rounded-xl border border-border bg-card p-2 shadow-2xl shadow-primary/10">
               <img
-                src={heroAsset.url}
+                src={heroDashboard}
                 alt="SASKA proposal dashboard showing a professional consulting proposal with pricing, status tracking, and client notifications"
                 className="w-full rounded-lg"
                 loading="eager"

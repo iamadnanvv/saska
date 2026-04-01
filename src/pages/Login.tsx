@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-import { FileText } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Login() {
@@ -40,7 +40,7 @@ export default function Login() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <Link to="/" className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <FileText className="h-5 w-5 text-primary-foreground" />
+            <Briefcase className="h-5 w-5 text-primary-foreground" />
           </Link>
           <CardTitle className="font-display text-2xl">Sign in to your account</CardTitle>
           <CardDescription>Access your team's proposal workspace</CardDescription>
