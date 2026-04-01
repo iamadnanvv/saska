@@ -44,7 +44,7 @@ export default function ResetPassword() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <Link to="/" className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <FileText className="h-5 w-5 text-primary-foreground" />
+            <Briefcase className="h-5 w-5 text-primary-foreground" />
           </Link>
           <CardTitle className="font-display text-2xl">Set new password</CardTitle>
           <CardDescription>Enter your new password below</CardDescription>
