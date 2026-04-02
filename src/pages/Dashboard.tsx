@@ -7,9 +7,25 @@ import { Badge } from "@/components/ui/badge";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { FileText, Users, DollarSign, Clock, PlusCircle, ArrowRight } from "lucide-react";
+import { FileText, Users, DollarSign, Clock, PlusCircle, ArrowRight, Sparkles, TrendingUp, Target } from "lucide-react";
 import { format, subMonths, startOfMonth } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, AreaChart, Area, CartesianGrid } from "recharts";
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+function getPersonalizedTip(stats: { total: number; pending: number; accepted: number; revenue: number }, role: string | null) {
+  if (stats.total === 0) return { icon: Sparkles, text: "Create your first proposal to get started! Templates make it easy." };
+  if (stats.pending > 3) return { icon: Target, text: `You have ${stats.pending} proposals awaiting response. Consider following up on the oldest ones.` };
+  const rate = stats.total > 0 ? Math.round((stats.accepted / stats.total) * 100) : 0;
+  if (rate >= 60) return { icon: TrendingUp, text: `Your ${rate}% win rate is excellent! Keep up the momentum.` };
+  if (rate > 0) return { icon: Target, text: `Your win rate is ${rate}%. Try customizing proposals with AI content to improve conversions.` };
+  return { icon: Sparkles, text: "Send out proposals to start tracking your performance." };
+}
 
 type Proposal = {
   id: string;
