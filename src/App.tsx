@@ -21,6 +21,7 @@ import ClientDetail from "./pages/ClientDetail";
 import Settings from "./pages/Settings";
 import PublicProposal from "./pages/PublicProposal";
 import NotFound from "./pages/NotFound";
+import PaymentWidget from "./components/PaymentWidget";
 
 const queryClient = new QueryClient();
 
