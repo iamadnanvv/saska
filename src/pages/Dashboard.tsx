@@ -116,15 +116,33 @@ export default function Dashboard() {
       <div className="space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="font-display text-2xl font-bold text-foreground">Dashboard</h1>
+            <h1 className="font-display text-2xl font-bold text-foreground">
+              {getGreeting()}{userName ? `, ${userName}` : ""}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              {role === "admin" ? "Organization-wide overview" : "Your proposals and activity"}
+              {role === "admin"
+                ? `${organization?.name ?? "SASKA"} — Organization overview`
+                : role === "manager"
+                ? `${organization?.name ?? "SASKA"} — Team performance`
+                : "Your proposals and activity"}
             </p>
           </div>
           <Button asChild className="gap-2 w-full sm:w-auto">
             <Link to="/proposals/new"><PlusCircle className="h-4 w-4" /> New Proposal</Link>
           </Button>
         </div>
+
+        {/* Personalized insight card */}
+        {!loading && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="flex items-center gap-3 p-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <tip.icon className="h-5 w-5" />
+              </div>
+              <p className="text-sm text-foreground">{tip.text}</p>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {statCards.map((s) => (
