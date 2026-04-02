@@ -45,11 +45,12 @@ const statusColors: Record<string, string> = {
 };
 
 export default function Dashboard() {
-  const { user, role } = useAuth();
+  const { user, role, organization } = useAuth();
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [allProposals, setAllProposals] = useState<Proposal[]>([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, accepted: 0, revenue: 0 });
   const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     if (!user) return;
