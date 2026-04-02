@@ -50,6 +50,7 @@ const App = () => (
             <Route path="/p/:shareId" element={<PublicProposal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <PaymentWidget />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
