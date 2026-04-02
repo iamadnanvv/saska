@@ -28,6 +28,8 @@ export default function Signup() {
     setLoading(false);
     if (error) { toast.error(error.message); } else {
       toast.success("Check your email for a confirmation link!");
+      // Send welcome email
+      sendNotificationEmail("welcome", email, "");
       navigate("/login");
     }
   };
