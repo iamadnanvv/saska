@@ -18,6 +18,7 @@ import { ArrowLeft, Pencil, MoreHorizontal, Copy, ExternalLink, Shield, FileDown
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { sendNotificationEmail } from "@/lib/email-notifications";
 
 const statusColors: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
@@ -30,7 +31,7 @@ const statusColors: Record<string, string> = {
 export default function ProposalDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { organization } = useAuth();
+  const { user, organization } = useAuth();
   const [proposal, setProposal] = useState<any>(null);
   const [lineItems, setLineItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,6 +62,20 @@ export default function ProposalDetail() {
     await supabase.from("proposals").update({ status } as any).eq("id", id!);
     setProposal({ ...proposal, status });
     toast.success(`Status updated to ${status}`);
+
+    // Send email notification on key status changes
+    if (user?.email && proposal) {
+      const clientName = proposal.clients?.name ?? "Client";
+      const total = Number(proposal.total) || 0;
+      if (status === "sent") {
+        const shareUrl = `${window.location.origin}/p/${proposal.share_id}`;
+        sendNotificationEmail("proposal_sent", user.email, proposal.title, clientName, total, shareUrl);
+      } else if (status === "accepted") {
+        sendNotificationEmail("proposal_accepted", user.email, proposal.title, clientName, total);
+      } else if (status === "rejected") {
+        sendNotificationEmail("proposal_rejected", user.email, proposal.title, clientName);
+      }
+    }
   };
 
   const copyShareLink = () => {

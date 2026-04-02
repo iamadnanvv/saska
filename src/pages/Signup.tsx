@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAuth } from "@/contexts/AuthContext";
 import { Briefcase } from "lucide-react";
 import { toast } from "sonner";
+import { sendNotificationEmail } from "@/lib/email-notifications";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -27,6 +28,8 @@ export default function Signup() {
     setLoading(false);
     if (error) { toast.error(error.message); } else {
       toast.success("Check your email for a confirmation link!");
+      // Send welcome email
+      sendNotificationEmail("welcome", email, "");
       navigate("/login");
     }
   };
