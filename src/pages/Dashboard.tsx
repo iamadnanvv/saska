@@ -54,6 +54,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!user) return;
+
+    // Load user name for greeting
+    supabase.from("profiles").select("full_name").eq("user_id", user.id).single().then(({ data }) => {
+      if (data?.full_name) setUserName(data.full_name.split(" ")[0]);
+    });
+
     const load = async () => {
       let query = supabase
         .from("proposals")
@@ -78,6 +84,8 @@ export default function Dashboard() {
     };
     load();
   }, [user, role]);
+
+  const tip = useMemo(() => getPersonalizedTip(stats, role), [stats, role]);
 
   const chartData = useMemo(() => {
     const months: { month: string; created: number; accepted: number }[] = [];
