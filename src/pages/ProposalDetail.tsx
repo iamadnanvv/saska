@@ -18,6 +18,7 @@ import { ArrowLeft, Pencil, MoreHorizontal, Copy, ExternalLink, Shield, FileDown
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { sendNotificationEmail } from "@/lib/email-notifications";
 
 const statusColors: Record<string, string> = {
   draft: "bg-muted text-muted-foreground",
