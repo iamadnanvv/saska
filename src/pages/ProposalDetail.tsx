@@ -31,7 +31,7 @@ const statusColors: Record<string, string> = {
 export default function ProposalDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { organization } = useAuth();
+  const { user, organization } = useAuth();
   const [proposal, setProposal] = useState<any>(null);
   const [lineItems, setLineItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
