@@ -142,6 +142,10 @@ export default function Settings() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="notifications" className="mt-6">
+            <NotificationPreferences />
+          </TabsContent>
+
           {isAdmin && (
             <TabsContent value="organization" className="mt-6">
               <Card>
