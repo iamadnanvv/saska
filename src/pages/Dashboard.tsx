@@ -52,37 +52,54 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState("");
 
+  const loadProposals = async () => {
+    if (!user) return;
+    let query = supabase
+      .from("proposals")
+      .select("id, title, status, total, created_at, clients(name)")
+      .order("created_at", { ascending: false });
+
+    if (role === "agent") {
+      query = query.eq("user_id", user.id);
+    }
+
+    const { data } = await query;
+    const rows = (data ?? []) as Proposal[];
+    setAllProposals(rows);
+    setProposals(rows.slice(0, 10));
+
+    const total = rows.length;
+    const pending = rows.filter((p) => p.status === "sent" || p.status === "viewed").length;
+    const accepted = rows.filter((p) => p.status === "accepted").length;
+    const revenue = rows.filter((p) => p.status === "accepted").reduce((s, p) => s + (Number(p.total) || 0), 0);
+    setStats({ total, pending, accepted, revenue });
+    setLoading(false);
+  };
+
   useEffect(() => {
     if (!user) return;
 
-    // Load user name for greeting
     supabase.from("profiles").select("full_name").eq("user_id", user.id).single().then(({ data }) => {
       if (data?.full_name) setUserName(data.full_name.split(" ")[0]);
     });
 
-    const load = async () => {
-      let query = supabase
-        .from("proposals")
-        .select("id, title, status, total, created_at, clients(name)")
-        .order("created_at", { ascending: false });
+    loadProposals();
 
-      if (role === "agent") {
-        query = query.eq("user_id", user.id);
-      }
+    // Realtime subscription for proposal status updates
+    const channel = supabase
+      .channel("dashboard-proposals")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "proposals" },
+        () => {
+          loadProposals();
+        }
+      )
+      .subscribe();
 
-      const { data } = await query;
-      const rows = (data ?? []) as Proposal[];
-      setAllProposals(rows);
-      setProposals(rows.slice(0, 10));
-
-      const total = rows.length;
-      const pending = rows.filter((p) => p.status === "sent" || p.status === "viewed").length;
-      const accepted = rows.filter((p) => p.status === "accepted").length;
-      const revenue = rows.filter((p) => p.status === "accepted").reduce((s, p) => s + (Number(p.total) || 0), 0);
-      setStats({ total, pending, accepted, revenue });
-      setLoading(false);
+    return () => {
+      supabase.removeChannel(channel);
     };
-    load();
   }, [user, role]);
 
   const tip = useMemo(() => getPersonalizedTip(stats, role), [stats, role]);
