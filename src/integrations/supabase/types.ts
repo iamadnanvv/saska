@@ -167,6 +167,36 @@ export type Database = {
           },
         ]
       }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          notify_accepted: boolean
+          notify_rejected: boolean
+          notify_viewed: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notify_accepted?: boolean
+          notify_rejected?: boolean
+          notify_viewed?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notify_accepted?: boolean
+          notify_rejected?: boolean
+          notify_viewed?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           address: string | null
