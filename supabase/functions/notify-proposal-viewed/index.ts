@@ -58,6 +58,21 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Check notification preferences
+    const { data: prefData } = await supabase
+      .from("notification_preferences")
+      .select("notify_viewed")
+      .eq("user_id", proposal.user_id)
+      .single();
+
+    // If preference exists and is disabled, skip
+    if (prefData && prefData.notify_viewed === false) {
+      return new Response(
+        JSON.stringify({ success: true, skipped: true, reason: "notifications_disabled" }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     // Get proposal owner's email from auth.users
     const { data: ownerData } = await supabase.auth.admin.getUserById(proposal.user_id);
     const ownerEmail = ownerData?.user?.email;
