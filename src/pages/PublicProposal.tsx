@@ -36,6 +36,15 @@ export default function PublicProposal() {
       user_agent: navigator.userAgent,
     } as any);
 
+    // Notify proposal owner via server-side function (no auth needed)
+    try {
+      await supabase.functions.invoke("notify-proposal-viewed", {
+        body: { proposal_id: p.id },
+      });
+    } catch (e) {
+      console.error("Failed to send view notification:", e);
+    }
+
     // Load org branding
     if (p.org_id) {
       const { data: o } = await supabase.from("organizations").select("name, logo_url, brand_primary_color").eq("id", p.org_id).single();
