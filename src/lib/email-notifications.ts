@@ -105,12 +105,35 @@ const EMAIL_TEMPLATES = {
 
 export type EmailTemplate = keyof typeof EMAIL_TEMPLATES;
 
+const PREF_MAP: Partial<Record<EmailTemplate, string>> = {
+  proposal_viewed: "notify_viewed",
+  proposal_accepted: "notify_accepted",
+  proposal_rejected: "notify_rejected",
+};
+
 export async function sendNotificationEmail(
   template: EmailTemplate,
   recipientEmail: string,
   ...args: any[]
 ) {
   try {
+    // Check user preferences for this notification type
+    const prefKey = PREF_MAP[template];
+    if (prefKey) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: prefs } = await supabase
+          .from("notification_preferences" as any)
+          .select(prefKey)
+          .eq("user_id", user.id)
+          .single();
+        if (prefs && (prefs as any)[prefKey] === false) {
+          console.log(`Notification ${template} disabled by user preference`);
+          return;
+        }
+      }
+    }
+
     const tmpl = EMAIL_TEMPLATES[template];
     const subject = (tmpl.subject as (...a: any[]) => string)(...args);
     const html = (tmpl.html as (...a: any[]) => string)(...args);

@@ -10,7 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Building2, User, Users, Layers } from "lucide-react";
+import { Building2, User, Users, Layers, Bell } from "lucide-react";
+import NotificationPreferences from "@/components/NotificationPreferences";
 
 export default function Settings() {
   const { user, role, organization, refreshOrg } = useAuth();
@@ -109,6 +110,7 @@ export default function Settings() {
         <Tabs defaultValue="profile">
           <TabsList className="flex-wrap h-auto">
             <TabsTrigger value="profile" className="gap-2"><User className="h-4 w-4" /> Profile</TabsTrigger>
+            <TabsTrigger value="notifications" className="gap-2"><Bell className="h-4 w-4" /> Notifications</TabsTrigger>
             {isAdmin && <TabsTrigger value="organization" className="gap-2"><Building2 className="h-4 w-4" /> Organization</TabsTrigger>}
             {isAdmin && <TabsTrigger value="team" className="gap-2"><Users className="h-4 w-4" /> Team</TabsTrigger>}
             {isAdmin && <TabsTrigger value="departments" className="gap-2"><Layers className="h-4 w-4" /> Departments</TabsTrigger>}
@@ -138,6 +140,10 @@ export default function Settings() {
                 </Button>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="notifications" className="mt-6">
+            <NotificationPreferences />
           </TabsContent>
 
           {isAdmin && (
