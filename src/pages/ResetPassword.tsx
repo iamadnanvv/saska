@@ -1,26 +1,28 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/contexts/AuthContext";
 import { Briefcase } from "lucide-react";
 import { toast } from "sonner";
+import { confirmPasswordReset } from "firebase/auth";
+import { firebaseAuth } from "@/lib/firebase";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { updatePassword } = useAuth();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const oobCode = searchParams.get("oobCode");
+
   useEffect(() => {
-    // Check for recovery token in URL hash
-    const hash = window.location.hash;
-    if (!hash.includes("type=recovery")) {
+    if (!oobCode) {
+      toast.error("Invalid or expired reset link");
       navigate("/login");
     }
-  }, [navigate]);
+  }, [oobCode, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,15 +30,16 @@ export default function ResetPassword() {
       toast.error("Password must be at least 6 characters");
       return;
     }
+    if (!oobCode) return;
     setLoading(true);
-    const { error } = await updatePassword(password);
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
-    } else {
+    try {
+      await confirmPasswordReset(firebaseAuth, oobCode, password);
       toast.success("Password updated successfully!");
-      navigate("/dashboard");
+      navigate("/login");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to reset password");
     }
+    setLoading(false);
   };
 
   return (
