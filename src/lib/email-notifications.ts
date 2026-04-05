@@ -122,12 +122,12 @@ export async function sendNotificationEmail(
     if (prefKey) {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const { data: prefs } = await supabase
+        const { data: prefsArr } = await supabase
           .from("notification_preferences" as any)
           .select(prefKey)
           .eq("user_id", user.id)
-          .single();
-        if (prefs && (prefs as any)[prefKey] === false) {
+          .limit(1);
+        if (prefsArr && prefsArr.length > 0 && (prefsArr[0] as any)[prefKey] === false) {
           console.log(`Notification ${template} disabled by user preference`);
           return;
         }
