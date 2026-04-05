@@ -74,11 +74,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setRole(roles[0].role as AppRole);
     }
 
-    const { data: profile } = await supabase
+    const { data: profiles } = await supabase
       .from("profiles")
       .select("org_id")
       .eq("user_id", uid)
-      .single();
+      .limit(1);
+    const profile = profiles && profiles.length > 0 ? profiles[0] : null;
 
     if (profile?.org_id) {
       const { data: org } = await supabase
