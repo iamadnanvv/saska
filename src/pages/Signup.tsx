@@ -27,10 +27,9 @@ export default function Signup() {
     const { error } = await signUp(email, password);
     setLoading(false);
     if (error) { toast.error(error.message); } else {
-      toast.success("Check your email for a confirmation link!");
-      // Send welcome email
+      toast.success("Account created successfully!");
       sendNotificationEmail("welcome", email, "");
-      navigate("/login");
+      navigate("/dashboard");
     }
   };
 

@@ -79,8 +79,8 @@ export default function Dashboard() {
   useEffect(() => {
     if (!user) return;
 
-    supabase.from("profiles").select("full_name").eq("user_id", user.id).single().then(({ data }) => {
-      if (data?.full_name) setUserName(data.full_name.split(" ")[0]);
+    supabase.from("profiles").select("full_name").eq("user_id", user.id).limit(1).then(({ data }) => {
+      if (data && data.length > 0 && data[0].full_name) setUserName(data[0].full_name.split(" ")[0]);
     });
 
     loadProposals();
