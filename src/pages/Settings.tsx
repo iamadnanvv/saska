@@ -37,8 +37,8 @@ export default function Settings() {
   useEffect(() => {
     if (!user) return;
     // Load profile
-    supabase.from("profiles").select("full_name").eq("user_id", user.id).single().then(({ data }) => {
-      if (data) setFullName(data.full_name ?? "");
+    supabase.from("profiles").select("full_name").eq("user_id", user.id).limit(1).then(({ data }) => {
+      if (data && data.length > 0) setFullName(data[0].full_name ?? "");
     });
     // Load org
     if (organization) {
