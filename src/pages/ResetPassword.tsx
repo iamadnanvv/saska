@@ -1,28 +1,31 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase } from "lucide-react";
 import { toast } from "sonner";
-import { confirmPasswordReset } from "firebase/auth";
-import { firebaseAuth } from "@/lib/firebase";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const oobCode = searchParams.get("oobCode");
-
   useEffect(() => {
-    if (!oobCode) {
-      toast.error("Invalid or expired reset link");
-      navigate("/login");
+    // Supabase handles the recovery token automatically via the URL hash
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const type = hashParams.get("type");
+    if (type !== "recovery") {
+      // Also check for access_token which indicates a valid recovery link
+      const accessToken = hashParams.get("access_token");
+      if (!accessToken) {
+        toast.error("Invalid or expired reset link");
+        navigate("/login");
+      }
     }
-  }, [oobCode, navigate]);
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,10 +33,10 @@ export default function ResetPassword() {
       toast.error("Password must be at least 6 characters");
       return;
     }
-    if (!oobCode) return;
     setLoading(true);
     try {
-      await confirmPasswordReset(firebaseAuth, oobCode, password);
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
       toast.success("Password updated successfully!");
       navigate("/login");
     } catch (err: any) {
