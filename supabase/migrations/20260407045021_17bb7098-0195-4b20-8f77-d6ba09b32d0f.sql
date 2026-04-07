@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ALTER COLUMN org_id SET DEFAULT NULL;
