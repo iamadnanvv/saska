@@ -1,18 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  sendPasswordResetEmail,
-  confirmPasswordReset,
-  onAuthStateChanged as firebaseOnAuthStateChanged,
-  signOut as firebaseSignOut,
-  updatePassword as firebaseUpdatePassword,
-} from "firebase/auth";
-import { firebaseAuth } from "@/lib/firebase";
 
 type AppRole = "admin" | "manager" | "agent";
 
@@ -45,17 +33,6 @@ type AuthContextType = {
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const googleProvider = new GoogleAuthProvider();
-
-async function bridgeFirebaseToSupabase(idToken: string) {
-  const { data, error } = await supabase.functions.invoke("firebase-auth-bridge", {
-    body: { idToken },
-  });
-  if (error) throw new Error(error.message || "Auth bridge failed");
-  if (data?.error) throw new Error(data.error);
-  return data.session as { access_token: string; refresh_token: string };
-}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -96,7 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Listen to Supabase auth state (session persistence)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -123,19 +99,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string) => {
     try {
-      // Create user in Firebase
-      const cred = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-      const idToken = await cred.user.getIdToken();
-
-      // Bridge to Supabase (creates user + returns session)
-      const bridgeSession = await bridgeFirebaseToSupabase(idToken);
-
-      // Set Supabase session (triggers onAuthStateChange)
-      await supabase.auth.setSession({
-        access_token: bridgeSession.access_token,
-        refresh_token: bridgeSession.refresh_token,
-      });
-
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) return { error: new Error(error.message) };
       return { error: null };
     } catch (err: any) {
       return { error: new Error(err.message || "Sign up failed") };
@@ -144,18 +109,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      // Sign in with Firebase
-      const cred = await signInWithEmailAndPassword(firebaseAuth, email, password);
-      const idToken = await cred.user.getIdToken();
-
-      // Bridge to Supabase
-      const bridgeSession = await bridgeFirebaseToSupabase(idToken);
-
-      await supabase.auth.setSession({
-        access_token: bridgeSession.access_token,
-        refresh_token: bridgeSession.refresh_token,
-      });
-
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return { error: new Error(error.message) };
       return { error: null };
     } catch (err: any) {
       return { error: new Error(err.message || "Sign in failed") };
@@ -163,19 +118,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signInWithGoogleAuth = async () => {
-    const cred = await signInWithPopup(firebaseAuth, googleProvider);
-    const idToken = await cred.user.getIdToken();
-
-    const bridgeSession = await bridgeFirebaseToSupabase(idToken);
-
-    await supabase.auth.setSession({
-      access_token: bridgeSession.access_token,
-      refresh_token: bridgeSession.refresh_token,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin + "/dashboard" },
     });
+    if (error) throw new Error(error.message);
   };
 
   const handleSignOut = async () => {
-    await firebaseSignOut(firebaseAuth);
     await supabase.auth.signOut();
     setRole(null);
     setOrganization(null);
@@ -183,10 +133,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPasswordFn = async (email: string) => {
     try {
-      await sendPasswordResetEmail(firebaseAuth, email, {
-        url: `${window.location.origin}/reset-password`,
-        handleCodeInApp: false,
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
       });
+      if (error) return { error: new Error(error.message) };
       return { error: null };
     } catch (err: any) {
       return { error: new Error(err.message || "Reset password failed") };
@@ -195,9 +145,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updatePasswordFn = async (password: string) => {
     try {
-      const currentUser = firebaseAuth.currentUser;
-      if (!currentUser) throw new Error("No authenticated user");
-      await firebaseUpdatePassword(currentUser, password);
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) return { error: new Error(error.message) };
       return { error: null };
     } catch (err: any) {
       return { error: new Error(err.message || "Update password failed") };
